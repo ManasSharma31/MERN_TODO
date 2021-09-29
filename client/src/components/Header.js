@@ -16,7 +16,7 @@ const useStyle = makeStyles((theme) => ({
         alignItems: "center",
         justifyContent: "space-between",
         padding: "0px 10px",
-        backgroundColor: "black",
+        backgroundColor: "#3F3F3F",
         color: "white",
     }
 }))
