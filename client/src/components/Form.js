@@ -23,7 +23,7 @@ const useStyle = makeStyles((theme => ({
         width: "50vw",
         minWidth: "300px",
         margin: "0px auto",
-        marginTop: "80px",
+        marginTop: "70px",
         backgroundColor: "#3F3F3F",
         boxShadow: "5px 5px 5px rgb(0,0,0)",
         border: "1px solid black"
@@ -64,6 +64,7 @@ export default function Form() {
     const [todos, setTodos] = useState({
         title: "",
         description: "",
+        id: null,
     })
     const [loading, setLoading] = useState(false);
     const [todoList, setTodoList] = useState([]);
@@ -98,15 +99,42 @@ export default function Form() {
     const addItem = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await axios.post('/', todos)
-            .then(res => {
+        if (todos.id === null) {
+
+            await axios.post('/', todos)
+                .then(res => {
+                    const data = res.data;
+                    setTodoList([...todoList, data]);
+                    setLoading(false);
+                    setTodos({
+                        title: "",
+                        description: "",
+                        id: null
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+        else {
+            await axios.patch(`/${todos.id}`, todos).then(res => {
+                console.log(res.data);
                 const data = res.data;
-                setTodoList([...todoList, data]);
+                var list = todoList.filter(todo => todos.id !== todo._id);
+                list = [...list, data];
+                setTodoList(list);
                 setLoading(false);
+                setTodos({
+                    title: "",
+                    description: "",
+                    id: null
+                });
+
             })
-            .catch(err => {
-                console.log(err);
-            })
+                .catch(err => {
+                    console.log(err)
+                });
+        }
 
     }
 
@@ -127,7 +155,7 @@ export default function Form() {
             <div className={classes.list}>
                 {
                     todoList?.map(todo => (
-                        <Task key={todo._id} id={todo._id} title={todo.title} des={todo.description} />
+                        <Task key={todo.id} id={todo._id} title={todo.title} des={todo.description} todoList={todoList} setTodoList={setTodoList} setTodos={setTodos} />
                     ))
                 }
             </div>

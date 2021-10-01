@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 const useStyle = makeStyles((theme) => ({
     root: {
-        height: "70px",
+        height: "60px",
         display: "flex",
         width: "100vw",
         position: "fixed",
